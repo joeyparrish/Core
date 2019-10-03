@@ -410,6 +410,7 @@ int SDLApp::run() {
         SDL_StopTextInput();
 #endif
 
+    int good_frame_count = 0;
     while(!appFinished) {
         last_msec = msec;
         msec      = SDL_GetTicks();
@@ -424,6 +425,13 @@ int SDLApp::run() {
         }
 
         delta_msec = buffer_msec;
+        if (delta_msec > 30) {
+          fprintf(stderr, "BAD FRAME: %d ms, NUM GOOD FRAMES: %d\n", delta_msec, good_frame_count);
+          fflush(stderr);
+          good_frame_count = 0;
+        } else {
+          good_frame_count++;
+        }
         buffer_msec =0;
 
         //determine time elapsed since last time we were here
